@@ -1,0 +1,66 @@
+<button mat-stroked-button (click)="newForm()">+ New Form</button>
+@for (form of forms; track $index) {
+<mat-card class="">
+    <mat-card-header>
+        <mat-card-title>
+            <mat-form-field>
+                <mat-label>Name</mat-label>
+                <input matInput placeholder="" [(ngModel)]="form.name">
+            </mat-form-field>
+        </mat-card-title>
+        <!-- <mat-card-subtitle>{{form.id}}</mat-card-subtitle> -->
+    </mat-card-header>
+    <mat-card-content>
+        <mat-form-field class="example-full-width">
+            <mat-label>Leave a comment</mat-label>
+            <textarea matInput placeholder="Place description" [(ngModel)]="form.description"></textarea>
+        </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions>
+        @if (form.id == 0) {
+        <button mat-button (click)="saveForm(form)">Save</button>
+        }
+        @else {
+        <button mat-button (click)="saveEditForm(form)">Save Edit</button>
+        <button mat-button (click)="delete(form)">Delete</button>
+        }
+    </mat-card-actions>
+    <mat-card-footer>
+        <mat-accordion>
+            <mat-expansion-panel hideToggle>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Fields
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        <button mat-button
+                            (click)="addField(form); $event.preventDefault(); $event.stopPropagation()">Add
+                            Field</button>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                @for (field of form.fields; track $index; let j = $index) {
+                <div>
+                    <mat-form-field>
+                        <mat-label>Title</mat-label>
+                        <input matInput placeholder="" [(ngModel)]="field.title">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Select</mat-label>
+                        <mat-select [(ngModel)]="field.type">
+                            @for (type of types; track $index) {
+                                <mat-option [value]="type">{{type | titlecase }}</mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Content</mat-label>
+                        <input matInput [type]="field.type" placeholder="" [(ngModel)]="field.content">
+                    </mat-form-field>
+                    <button mat-button (click)="deleteField(j, form)">Remove Field</button>
+                </div>
+                }
+            </mat-expansion-panel>
+        </mat-accordion>
+    </mat-card-footer>
+</mat-card>
+}
